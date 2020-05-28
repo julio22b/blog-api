@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const moment = require('moment');
+const { validationResult } = require('express-validator');
 
 // GET ALL POSTS /POSTS
 exports.get_all_posts = function (req, res) {
@@ -11,6 +12,11 @@ exports.get_all_posts = function (req, res) {
 // CREATE A POST /POST/CREATE
 exports.post_post = function (req, res) {
     const { title, text, published } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.json(errors.errors);
+        return;
+    }
     const post = new Post({
         title,
         text,
@@ -36,6 +42,11 @@ exports.get_post = function (req, res) {
 // UPDATE A POST /POST/:ID/UPDATE
 exports.update_post = function (req, res, next) {
     const { title, text, published } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.json(errors.errors);
+        return;
+    }
     const updatedPost = {
         title,
         text,
