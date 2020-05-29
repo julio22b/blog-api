@@ -8,10 +8,10 @@ router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
-router.get('/posts', postController.get_all_posts);
+router.get('/api/posts', postController.get_all_posts);
 
 router.post(
-    '/post/create',
+    '/api/post/create',
     [
         check('title', 'Title is required').isLength({ min: 1 }).trim().escape(),
         check('text', 'Content is required').isLength({ min: 1 }).trim().escape(),
@@ -21,10 +21,10 @@ router.post(
     postController.post_post,
 );
 
-router.get('/post/:id', postController.get_post);
+router.get('/api/post/:id', postController.get_post);
 
 router.put(
-    '/post/:id/update',
+    '/api/post/:id/update',
     [
         check('title', 'Title is required').isLength({ min: 1 }).trim().escape(),
         check('text', 'Content is required').isLength({ min: 1 }).trim().escape(),
@@ -34,6 +34,6 @@ router.put(
     postController.update_post,
 );
 
-router.delete('/post/:id/delete', postController.delete_post);
+router.delete('/api/post/:id/delete', postController.delete_post);
 
 module.exports = router;
