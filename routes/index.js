@@ -1,17 +1,26 @@
 var express = require('express');
 var router = express.Router();
 const postController = require('../controllers/postController');
+const userController = require('../controllers/userController');
 const { check } = require('express-validator');
+const passport = require('passport');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
+/* router.post('/api/sign-up', userController.post_sign_up); */
+
 router.get('/api/posts', postController.get_all_posts);
 
 router.post(
     '/api/post/create',
+    /* passport.authenticate('jwt', {
+        session: false,
+        successRedirect: '/posts',
+        failureRedirect: '/',
+    }), */
     [
         check('title', 'Title is required').isLength({ min: 1 }).trim().escape(),
         check('text', 'Content is required').isLength({ min: 1 }).trim().escape(),
@@ -35,5 +44,7 @@ router.put(
 );
 
 router.delete('/api/post/:id/delete', postController.delete_post);
+
+router.post('/api/log-in/', userController.post_log_in);
 
 module.exports = router;
