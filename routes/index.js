@@ -36,12 +36,19 @@ router.put(
         session: false,
     }),
     [
-        check('title', 'Title is required').isLength({ min: 1 }).trim().escape(),
-        check('text', 'Content is required').isLength({ min: 1 }).trim().escape(),
+        check('title').trim().escape(),
+        check('text').trim().escape(),
         check('image').trim().escape(),
         check('published', 'Published status is required').not().isEmpty().trim().escape(),
     ],
     postController.update_post,
+);
+
+router.put(
+    '/api/post/:id/update-published-status',
+    passport.authenticate('jwt', { session: false }),
+    [check('published').trim().escape()],
+    postController.update_published_status,
 );
 
 router.delete(

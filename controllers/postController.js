@@ -53,9 +53,17 @@ exports.update_post = function (req, res, next) {
         published,
         last_update: moment().format('MMMM Do[,] YYYY'),
     };
-    Post.findByIdAndUpdate(req.params.id, updatedPost, (err, doc) => {
+    Post.findByIdAndUpdate(req.params.id, updatedPost, { new: true }, (err, doc) => {
         if (err) return next(err);
         res.json(doc);
+    });
+};
+
+// UPDATE A POST PUBLISHE DSTATUS /POST/:ID/UPDATE-PUBLISHED-STATUS
+exports.update_published_status = function (req, res, next) {
+    const { published } = req.body;
+    Post.findByIdAndUpdate(req.params.id, { published }, { new: true }).then((updatedDoc) => {
+        res.json(updatedDoc);
     });
 };
 
