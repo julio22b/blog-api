@@ -9,7 +9,6 @@ const passport = require('passport');
 const jwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('./models/user');
-const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -29,20 +28,14 @@ passport.use(
             secretOrKey: process.env.JWT_SECRET,
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         },
-        function (req, payload, done) {
+        function (payload, done) {
             User.findOne({ username: payload.username }, (err, user) => {
-                console.log(payload);
                 if (err) return done(err);
                 if (!user) {
                     return done(null, false, { message: 'Username was not found' });
+                } else {
+                    return done(null, user);
                 }
-                bcrypt.compare(payload.password, user.password, (err, success) => {
-                    if (success) {
-                        return done(null, user);
-                    } else {
-                        return done(null, false, { message: 'Incorrect password' });
-                    }
-                });
             });
         },
     ),
@@ -52,7 +45,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.use(cors()); // NEEDS ADD ORIGIN
-/* app.use(passport.authenticate('jwt', { session: false })); */
+app.use(passport.initialize());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -5,18 +5,31 @@ const jwt = require('jsonwebtoken');
 
 exports.post_log_in = function (req, res, next) {
     const { username, password } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ errors: errors.errors });
+    }
 
     User.findOne({ username }, (err, user) => {
         if (err) {
             return next(err);
         }
         if (!user) {
-            return res.json({ message: 'no user found' });
+            return res.status(401).json({ message: 'No user found' });
         }
-        const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 3600 });
-        return res.status(200).json({
-            message: 'User authenticated',
-            token,
+        bcrypt.compare(password, user.password, (err, success) => {
+            if (err) return next(err);
+            if (success) {
+                const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 3600 });
+                return res.status(200).json({
+                    message: 'User authenticated',
+                    token,
+                    username: user.username,
+                    admin: user.admin,
+                });
+            } else {
+                return res.stats(401).json({ message: 'Incorrect Password' });
+            }
         });
     });
 };

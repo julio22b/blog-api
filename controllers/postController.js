@@ -12,7 +12,6 @@ exports.get_all_posts = function (req, res) {
 // CREATE A POST /POST/CREATE
 exports.post_post = function (req, res) {
     const { title, text, published } = req.body;
-    console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.json(errors.errors);
@@ -25,7 +24,6 @@ exports.post_post = function (req, res) {
         published,
     });
     post.save().then((post) => {
-        console.log(post);
         res.json(post);
     });
 };

@@ -14,13 +14,13 @@ router.get('/', function (req, res, next) {
 
 router.get('/api/posts', postController.get_all_posts);
 
+router.get('/api/post/:id', postController.get_post);
+
 router.post(
     '/api/post/create',
-    /* passport.authenticate('jwt', {
+    passport.authenticate('jwt', {
         session: false,
-        successRedirect: '/posts',
-        failureRedirect: '/',
-    }), */
+    }),
     [
         check('title', 'Title is required').isLength({ min: 1 }).trim().escape(),
         check('text', 'Content is required').isLength({ min: 1 }).trim().escape(),
@@ -30,10 +30,11 @@ router.post(
     postController.post_post,
 );
 
-router.get('/api/post/:id', postController.get_post);
-
 router.put(
     '/api/post/:id/update',
+    passport.authenticate('jwt', {
+        session: false,
+    }),
     [
         check('title', 'Title is required').isLength({ min: 1 }).trim().escape(),
         check('text', 'Content is required').isLength({ min: 1 }).trim().escape(),
@@ -43,7 +44,13 @@ router.put(
     postController.update_post,
 );
 
-router.delete('/api/post/:id/delete', postController.delete_post);
+router.delete(
+    '/api/post/:id/delete',
+    passport.authenticate('jwt', {
+        session: false,
+    }),
+    postController.delete_post,
+);
 
 router.post('/api/log-in/', userController.post_log_in);
 
