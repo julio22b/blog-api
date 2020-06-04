@@ -28,7 +28,7 @@ exports.post_log_in = function (req, res, next) {
                     admin: user.admin,
                 });
             } else {
-                return res.stats(401).json({ message: 'Incorrect Password' });
+                return res.status(401).json({ message: 'Incorrect Password' });
             }
         });
     });

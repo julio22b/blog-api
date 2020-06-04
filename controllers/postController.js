@@ -42,6 +42,7 @@ exports.get_post = function (req, res) {
 // UPDATE A POST /POST/:ID/UPDATE
 exports.update_post = function (req, res, next) {
     const { title, text, published } = req.body;
+    console.log(req.params.id);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.json(errors.errors);
@@ -53,24 +54,32 @@ exports.update_post = function (req, res, next) {
         published,
         last_update: moment().format('MMMM Do[,] YYYY'),
     };
-    Post.findByIdAndUpdate(req.params.id, updatedPost, { new: true }, (err, doc) => {
-        if (err) return next(err);
-        res.json(doc);
-    });
+    Post.findByIdAndUpdate(req.params.id, updatedPost, { new: true })
+        .then((updated) => {
+            console.log(updated);
+            res.status(200).json({ message: 'Post updated', updated });
+        })
+        .catch((err) => {
+            return next(err);
+        });
 };
 
 // UPDATE A POST PUBLISHE DSTATUS /POST/:ID/UPDATE-PUBLISHED-STATUS
 exports.update_published_status = function (req, res, next) {
     const { published } = req.body;
-    Post.findByIdAndUpdate(req.params.id, { published }, { new: true }).then((updatedDoc) => {
-        res.json(updatedDoc);
-    });
+    Post.findByIdAndUpdate(req.params.id, { published }, { new: true })
+        .then((updatedDoc) => {
+            res.json(updatedDoc);
+        })
+        .catch((err) => {
+            return next(err);
+        });
 };
 
 // DELETE A POST /POST/:ID/DELETE
 exports.delete_post = function (req, res, next) {
     Post.findByIdAndDelete(req.params.id, (err, doc) => {
         if (err) return next(err);
-        res.status(200);
+        res.status(200).json({ message: 'Post deleted' });
     });
 };
