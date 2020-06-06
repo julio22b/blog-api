@@ -20,7 +20,9 @@ exports.post_log_in = function (req, res, next) {
         bcrypt.compare(password, user.password, (err, success) => {
             if (err) return next(err);
             if (success) {
-                const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 3600 });
+                const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
+                    expiresIn: 3600 * 24 * 7,
+                });
                 return res.status(200).json({
                     message: 'User authenticated',
                     token,

@@ -11,10 +11,11 @@ exports.get_all_posts = function (req, res) {
 
 // CREATE A POST /POST/CREATE
 exports.post_post = function (req, res) {
-    const { title, text, published } = req.body;
+    console.log('file', req.file);
+    const { title, text, published, image } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.json(errors.errors);
+        res.status(400).json(errors.errors);
         return;
     }
     const post = new Post({
@@ -22,6 +23,7 @@ exports.post_post = function (req, res) {
         text,
         timestamp: moment().format('MMMM Do[,] YYYY'),
         published,
+        image,
     });
     post.save().then((post) => {
         res.json(post);
@@ -42,10 +44,9 @@ exports.get_post = function (req, res) {
 // UPDATE A POST /POST/:ID/UPDATE
 exports.update_post = function (req, res, next) {
     const { title, text, published } = req.body;
-    console.log(req.params.id);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.json(errors.errors);
+        res.status(400).json(errors.errors);
         return;
     }
     const updatedPost = {
