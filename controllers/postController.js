@@ -1,6 +1,7 @@
 const Post = require('../models/post');
 const moment = require('moment');
 const { validationResult } = require('express-validator');
+const showdown = require('showdown');
 
 // GET ALL POSTS /POSTS
 exports.get_all_posts = function (req, res) {
@@ -37,6 +38,9 @@ exports.get_post = function (req, res) {
             res.json({ error: `That post doesn't exist.` });
             return;
         }
+        const converter = new showdown.Converter();
+        const html = converter.makeHtml(foundPost.text);
+        foundPost.text = html;
         res.json(foundPost);
     });
 };
