@@ -92,7 +92,6 @@ router.get('/api/post/:id/comments', commentController.get_post_comments);
 
 router.post(
     '/api/post/:id/comments',
-    passport.authenticate('jwt', { session: false }),
     [
         check('commenter').trim().escape(),
         check('comment').isLength({ min: 1, max: 200 }).trim().escape(),
