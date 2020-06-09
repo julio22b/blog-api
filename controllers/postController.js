@@ -39,9 +39,8 @@ exports.get_post = function (req, res) {
             return;
         }
         const converter = new showdown.Converter();
-        const html = converter.makeHtml(foundPost.text);
-        foundPost.text = html;
-        res.json(foundPost);
+        const contentAsHTML = converter.makeHtml(foundPost.text);
+        res.json({ foundPost, contentAsHTML });
     });
 };
 

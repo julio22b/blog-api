@@ -36,8 +36,8 @@ const upload = multer({
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
 });
-
-/* router.post('/api/sign-up', userController.post_sign_up); */
+/* 
+router.post('/api/sign-up', userController.post_sign_up); */
 
 router.get('/api/posts', postController.get_all_posts);
 

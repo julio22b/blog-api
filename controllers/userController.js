@@ -35,8 +35,8 @@ exports.post_log_in = function (req, res, next) {
         });
     });
 };
-/* 
-exports.post_sign_up = function (req, res, next) {
+
+/* exports.post_sign_up = function (req, res, next) {
     const { username, password, admin } = req.body;
     bcrypt.hash(password, 10, (err, hashedPassword) => {
         const user = new User({
