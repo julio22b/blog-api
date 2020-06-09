@@ -6,7 +6,7 @@ const showdown = require('showdown');
 // GET ALL POSTS /POSTS
 exports.get_all_posts = function (req, res) {
     Post.find({}).then((posts) => {
-        res.json(posts);
+        res.status(200).json(posts);
     });
 };
 
@@ -47,7 +47,7 @@ exports.get_post = function (req, res) {
 
 // UPDATE A POST /POST/:ID/UPDATE
 exports.update_post = function (req, res, next) {
-    const { title, text, published } = req.body;
+    const { title, text, published, image } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.status(400).json(errors.errors);
@@ -57,6 +57,7 @@ exports.update_post = function (req, res, next) {
         title,
         text,
         published,
+        image,
         last_update: moment().format('MMMM Do[,] YYYY'),
     };
     Post.findByIdAndUpdate(req.params.id, updatedPost, { new: true })
